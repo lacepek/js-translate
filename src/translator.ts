@@ -4,14 +4,18 @@ export function translate(
   translations: { [key: string]: any },
   params?: { [key: string]: any }
 ) {
-  const keys = key.split(".");
+  const keys = key.split('.');
   const translation = keys.reduce(searchForKey, translations[locale]);
 
-  if (translation instanceof Function) {
-    return translation(params);
+  if (!translation) {
+    return key;
   }
 
   if (params) {
+    if (translation instanceof Function) {
+      return translation(params);
+    }
+
     return injectParamsToTranslation(params, translation);
   }
 
@@ -23,7 +27,7 @@ function searchForKey(current: string, key: string) {
     return current[key];
   }
 
-  return key;
+  return null;
 }
 
 function injectParamsToTranslation(params: { [key: string]: any }, translation: string) {
