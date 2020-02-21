@@ -23,11 +23,11 @@ export function translate(
 }
 
 function searchForKey(current: string, key: string) {
-  if (current[key]) {
-    return current[key];
+  if (!current || !current[key]) {
+    return null;
   }
 
-  return null;
+  return current[key];
 }
 
 function injectParamsToTranslation(params: { [key: string]: any }, translation: string) {

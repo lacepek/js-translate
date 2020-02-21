@@ -16,10 +16,10 @@ function translate(key, locale, translations, params) {
 }
 exports.translate = translate;
 function searchForKey(current, key) {
-    if (current[key]) {
-        return current[key];
+    if (!current || !current[key]) {
+        return null;
     }
-    return null;
+    return current[key];
 }
 function injectParamsToTranslation(params, translation) {
     var keys = Object.keys(params);

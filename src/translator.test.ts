@@ -65,11 +65,11 @@ describe('Translator test', () => {
   });
 
   it('returns key when nothing is found', () => {
-    expect(translate('test.not-found', 'en', translations)).toBe('test.not-found');
-    expect(translate('test.not-found', 'en', translations, { count: 8 })).toBe('test.not-found');
-    expect(translate('test.not-found', 'en', translations, { hours: 8, minutes: '00' })).toBe('test.not-found');
-    expect(translate('test.not-found', 'cs', translations)).toBe('test.not-found');
-    expect(translate('test.not-found', 'cs', translations, { count: 4 })).toBe('test.not-found');
-    expect(translate('test.not-found', 'cs', translations, { hours: 8, minutes: '00' })).toBe('test.not-found');
+    expect(translate('test.not.found', 'en', translations)).toBe('test.not.found');
+    expect(translate('test.not.found', 'en', translations, { count: 8 })).toBe('test.not.found');
+    expect(translate('test.not.found', 'en', translations, { hours: 8, minutes: '00' })).toBe('test.not.found');
+    expect(translate('test.not.found', 'cs', translations)).toBe('test.not.found');
+    expect(translate('test.not.found', 'cs', translations, { count: 4 })).toBe('test.not.found');
+    expect(translate('test.not.found', 'cs', translations, { hours: 8, minutes: '00' })).toBe('test.not.found');
   });
 });
