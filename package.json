@@ -1,5 +1,5 @@
 {
-  "name": "js-translate",
+  "name": "translate.ts",
   "version": "1.0.0",
   "description": "Minimal javascript translation library",
   "main": "./dist/index.js",
