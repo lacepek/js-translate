@@ -11,8 +11,8 @@ const translations = {
         }
         return 'You have 1 pear';
       },
-      time: 'Its {{hours}}:{{minutes}}'
-    }
+      time: 'Its {{hours}}:{{minutes}}',
+    },
   },
   cs: {
     test: {
@@ -28,9 +28,9 @@ const translations = {
 
         return `Máš ${count} hrušky`;
       },
-      time: 'Je {{hours}}:{{minutes}}'
-    }
-  }
+      time: 'Je {{hours}}:{{minutes}}',
+    },
+  },
 };
 
 describe('Translator test', () => {
@@ -71,5 +71,10 @@ describe('Translator test', () => {
     expect(translate('test.not.found', 'cs', translations)).toBe('test.not.found');
     expect(translate('test.not.found', 'cs', translations, { count: 4 })).toBe('test.not.found');
     expect(translate('test.not.found', 'cs', translations, { hours: 8, minutes: '00' })).toBe('test.not.found');
+  });
+
+  it('returns undefined or null', () => {
+    expect(translate(undefined, 'en', translations)).toBe(undefined);
+    expect(translate(null, 'en', translations)).toBe(null);
   });
 });

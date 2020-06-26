@@ -4,6 +4,10 @@ export function translate(
   translations: { [key: string]: any },
   params?: { [key: string]: any }
 ) {
+  if (key === null || key === undefined) {
+    return key;
+  }
+
   const keys = key.split('.');
   const translation = keys.reduce(searchForKey, translations[locale]);
 
