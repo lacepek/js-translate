@@ -73,8 +73,8 @@ describe('Translator test', () => {
     expect(translate('test.not.found', 'cs', translations, { hours: 8, minutes: '00' })).toBe('test.not.found');
   });
 
-  it('returns undefined or null', () => {
-    expect(translate(undefined, 'en', translations)).toBe(undefined);
+  it('returns null', () => {
+    expect(translate(undefined, 'en', translations)).toBe(null);
     expect(translate(null, 'en', translations)).toBe(null);
   });
 });

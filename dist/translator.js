@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.translate = void 0;
 function translate(key, locale, translations, params) {
     if (key === null || key === undefined) {
-        return key;
+        return null;
     }
     var keys = key.split('.');
     var translation = keys.reduce(searchForKey, translations[locale]);

@@ -5,7 +5,7 @@ export function translate(
   params?: { [key: string]: any }
 ) {
   if (key === null || key === undefined) {
-    return key;
+    return null;
   }
 
   const keys = key.split('.');
