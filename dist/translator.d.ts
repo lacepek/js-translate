@@ -1,5 +1,6 @@
 export declare type Options = {
     interpolation?: Interpolation;
+    localeModificator?: (locale: string) => string;
 };
 export declare type Interpolation = {
     prefix?: string;

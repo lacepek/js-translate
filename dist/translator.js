@@ -2,8 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.translate = void 0;
 function translate(key, locale, translations, params, options) {
+    if (options === void 0) { options = {}; }
+    var localeModificator = options.localeModificator;
     if (key === null || key === undefined) {
         return null;
+    }
+    if (params && Object.keys(params).includes("count")) {
+        var rules = new Intl.PluralRules((localeModificator && localeModificator(locale)) || locale);
+        var count = params["count"];
+        var rule = rules.select(count);
+        key += "_".concat(rule);
     }
     var keys = key.split(".");
     var translation = keys.reduce(searchForKey, translations[locale]);
