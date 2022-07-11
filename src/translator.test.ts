@@ -5,7 +5,7 @@ const translations = {
         test: {
             apple: "Apple",
             pears: (params: { [key: string]: any }) => {
-                const count = params.count;
+                const count = params.value;
                 if (count !== 1) {
                     return `You have ${count} pears`;
                 }
@@ -18,12 +18,16 @@ const translations = {
             suffix: "{{param}",
             both: "{param}",
         },
+        count: {
+            apple_one: "1 apple",
+            apple_other: "{{count}} apples",
+        },
     },
     cs: {
         test: {
             apple: "Jablko",
             pears: (params: { [key: string]: any }) => {
-                const count = params.count;
+                const count = params.value;
                 if (count === 1) {
                     return "Máš jednu hrušku";
                 }
@@ -34,6 +38,11 @@ const translations = {
                 return `Máš ${count} hrušky`;
             },
             time: "Je {{hours}}:{{minutes}}",
+        },
+        count: {
+            apple_one: "1 jablko",
+            apple_few: "{{count}} jablka",
+            apple_other: "{{count}} jablek",
         },
     },
 };
@@ -63,18 +72,18 @@ describe("Translator test", () => {
         const csSingular = "Máš jednu hrušku";
         const csPlural = "Máš 4 hrušky";
 
-        expect(translate("test.pears", "en", translations, { count: 1 })).toBe(enSingular);
-        expect(translate("test.pears", "en", translations, { count: 8 })).toBe(enPlural);
-        expect(translate("test.pears", "cs", translations, { count: 1 })).toBe(csSingular);
-        expect(translate("test.pears", "cs", translations, { count: 4 })).toBe(csPlural);
+        expect(translate("test.pears", "en", translations, { value: 1 })).toBe(enSingular);
+        expect(translate("test.pears", "en", translations, { value: 8 })).toBe(enPlural);
+        expect(translate("test.pears", "cs", translations, { value: 1 })).toBe(csSingular);
+        expect(translate("test.pears", "cs", translations, { value: 4 })).toBe(csPlural);
     });
 
     it("returns key when nothing is found", () => {
         expect(translate("test.not.found", "en", translations)).toBe("test.not.found");
-        expect(translate("test.not.found", "en", translations, { count: 8 })).toBe("test.not.found");
+        expect(translate("test.not.found", "en", translations, { value: 8 })).toBe("test.not.found");
         expect(translate("test.not.found", "en", translations, { hours: 8, minutes: "00" })).toBe("test.not.found");
         expect(translate("test.not.found", "cs", translations)).toBe("test.not.found");
-        expect(translate("test.not.found", "cs", translations, { count: 4 })).toBe("test.not.found");
+        expect(translate("test.not.found", "cs", translations, { value: 4 })).toBe("test.not.found");
         expect(translate("test.not.found", "cs", translations, { hours: 8, minutes: "00" })).toBe("test.not.found");
     });
 
@@ -111,5 +120,36 @@ describe("Translator test", () => {
                 { interpolation: { prefix: "{", suffix: "}" } }
             )
         ).toBe("both");
+    });
+
+    it("uses cs plural rules", () => {
+        for (let count = 0; count <= 5; count++) {
+            const apples = translate("count.apple", "cs", translations, { count });
+
+            if (count === 1) {
+                expect(apples).toBe("1 jablko");
+                continue;
+            }
+
+            if (count === 0 || count > 4) {
+                expect(apples).toBe(`${count} jablek`);
+                continue;
+            }
+
+            expect(apples).toBe(`${count} jablka`);
+        }
+    });
+
+    it("uses en plural rules", () => {
+        for (let count = 0; count <= 3; count++) {
+            const apples = translate("count.apple", "en", translations, { count });
+
+            if (count === 1) {
+                expect(apples).toBe("1 apple");
+                continue;
+            }
+
+            expect(apples).toBe(`${count} apples`);
+        }
     });
 });
