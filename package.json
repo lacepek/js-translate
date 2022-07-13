@@ -1,6 +1,6 @@
 {
   "name": "translate.ts",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Minimal javascript translation library",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -8,6 +8,7 @@
     "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
+    "prepublishOnly": "node prepublish.js",
     "release": "npm run build && RELEASE=true npm publish"
   },
   "repository": {

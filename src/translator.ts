@@ -8,6 +8,10 @@ export type Interpolation = {
     suffix?: string;
 };
 
+const COUNT_KEY = "count";
+const CONTEXT_KEY = "context";
+const CAPITALIZE_KEY = "capitalize";
+
 export function translate(
     key: string,
     locale: string,
@@ -21,16 +25,24 @@ export function translate(
         return null;
     }
 
-    if (params && Object.keys(params).includes("count")) {
-        const rules = new Intl.PluralRules((localeModificator && localeModificator(locale)) || locale);
-        const count = params["count"];
-        const rule = rules.select(count);
-        
-        key += `_${rule}`;
+    if (params) {
+        const paramsKeys = Object.keys(params);
+        if (paramsKeys.includes(CONTEXT_KEY)) {
+            const context = params[CONTEXT_KEY];
+            key += `_${context}`;
+        }
+
+        if (paramsKeys.includes(COUNT_KEY)) {
+            const rules = new Intl.PluralRules((localeModificator && localeModificator(locale)) || locale);
+            const count = params[COUNT_KEY];
+            const rule = rules.select(count);
+
+            key += `_${rule}`;
+        }
     }
 
     const keys = key.split(".");
-    const translation = keys.reduce(searchForKey, translations[locale]);
+    let translation = keys.reduce(searchForKey, translations[locale]);
 
     if (!translation) {
         return key;
@@ -41,7 +53,13 @@ export function translate(
             return translation(params);
         }
 
-        return injectParamsToTranslation(params, translation, options?.interpolation);
+        translation = injectParamsToTranslation(params, translation, options?.interpolation);
+
+        if (Object.keys(params).includes(CAPITALIZE_KEY) && params[CAPITALIZE_KEY] === true) {
+            if (typeof translation === "string") {
+                translation = translation.charAt(0).toUpperCase() + translation.slice(1);
+            }
+        }
     }
 
     return translation;

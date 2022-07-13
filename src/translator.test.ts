@@ -22,6 +22,19 @@ const translations = {
             apple_one: "1 apple",
             apple_other: "{{count}} apples",
         },
+        context: {
+            friend: "A friend",
+            friend_male: "A boyfriend",
+            friend_female: "A girlfriend",
+            friend_male_one: "A boyfriend",
+            friend_female_one: "A girlfriend",
+            friend_male_other: "{{count}} boyfriends",
+            friend_female_other: "{{count}} girlfriends",
+        },
+        capitalize: {
+            apple: "{{color}} apple",
+            pear: "pear"
+        }
     },
     cs: {
         test: {
@@ -44,6 +57,10 @@ const translations = {
             apple_few: "{{count}} jablka",
             apple_other: "{{count}} jablek",
         },
+        capitalize: {
+            apple: "{{color}} jablko",
+            pear: "hruška"
+        }
     },
 };
 
@@ -152,4 +169,28 @@ describe("Translator test", () => {
             expect(apples).toBe(`${count} apples`);
         }
     });
+
+    it("uses context", () => {
+        expect(translate("context.friend", "en", translations)).toBe("A friend");
+        expect(translate("context.friend", "en", translations, { context: "male" })).toBe("A boyfriend");
+        expect(translate("context.friend", "en", translations, { context: "female" })).toBe("A girlfriend");
+    });
+
+    it("uses context with count", () => {
+        expect(translate("context.friend", "en", translations, { context: "male", count: 1 })).toBe("A boyfriend");
+        expect(translate("context.friend", "en", translations, { context: "female", count: 1 })).toBe("A girlfriend");
+
+        const count = 5;
+        expect(translate("context.friend", "en", translations, { context: "male", count })).toBe(
+            count + " boyfriends"
+        );
+        expect(translate("context.friend", "en", translations, { context: "female", count })).toBe(
+            count + " girlfriends"
+        );
+    });
+
+    it("uses capitalize", () => {
+        expect(translate("capitalize.apple", "en", translations, { color: "red", capitalize: true })).toBe("Red apple");
+        expect(translate("capitalize.pear", "en", translations, { capitalize: true })).toBe("Pear");
+    })
 });
