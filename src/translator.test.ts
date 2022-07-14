@@ -30,11 +30,14 @@ const translations = {
             friend_female_one: "A girlfriend",
             friend_male_other: "{{count}} boyfriends",
             friend_female_other: "{{count}} girlfriends",
+            doctor: "Doctor",
+            doctor_adj: "doctors",
+            round: "round",
         },
         capitalize: {
             apple: "{{color}} apple",
-            pear: "pear"
-        }
+            pear: "pear",
+        },
     },
     cs: {
         test: {
@@ -56,11 +59,20 @@ const translations = {
             apple_one: "1 jablko",
             apple_few: "{{count}} jablka",
             apple_other: "{{count}} jablek",
+            pear: "Hruška",
         },
         capitalize: {
             apple: "{{color}} jablko",
-            pear: "hruška"
-        }
+            pear: "hruška",
+        },
+        context: {
+            doctor: "Doktor",
+            doctor_female: "Doktorka",
+            doctor_adj: "doktorský",
+            doctor_adj_neutral: "doktorské",
+            round_adj_male: "kulatý",
+            round_adj_female: "kulatá",
+        },
     },
 };
 
@@ -172,25 +184,58 @@ describe("Translator test", () => {
 
     it("uses context", () => {
         expect(translate("context.friend", "en", translations)).toBe("A friend");
-        expect(translate("context.friend", "en", translations, { context: "male" })).toBe("A boyfriend");
-        expect(translate("context.friend", "en", translations, { context: "female" })).toBe("A girlfriend");
+        expect(translate("context.friend", "en", translations, {}, { context: "male" })).toBe("A boyfriend");
+        expect(translate("context.friend", "en", translations, {}, { context: "female" })).toBe("A girlfriend");
     });
 
     it("uses context with count", () => {
-        expect(translate("context.friend", "en", translations, { context: "male", count: 1 })).toBe("A boyfriend");
-        expect(translate("context.friend", "en", translations, { context: "female", count: 1 })).toBe("A girlfriend");
+        expect(translate("context.friend", "en", translations, { count: 1 }, { context: "male" })).toBe("A boyfriend");
+        expect(translate("context.friend", "en", translations, { count: 1 }, { context: "female" })).toBe(
+            "A girlfriend"
+        );
 
         const count = 5;
-        expect(translate("context.friend", "en", translations, { context: "male", count })).toBe(
+        expect(translate("context.friend", "en", translations, { count }, { context: "male" })).toBe(
             count + " boyfriends"
         );
-        expect(translate("context.friend", "en", translations, { context: "female", count })).toBe(
+        expect(translate("context.friend", "en", translations, { count }, { context: "female" })).toBe(
             count + " girlfriends"
         );
     });
 
     it("uses capitalize", () => {
-        expect(translate("capitalize.apple", "en", translations, { color: "red", capitalize: true })).toBe("Red apple");
-        expect(translate("capitalize.pear", "en", translations, { capitalize: true })).toBe("Pear");
-    })
+        expect(translate("capitalize.apple", "en", translations, { color: "red" }, { capitalize: true })).toBe(
+            "Red apple"
+        );
+        expect(translate("capitalize.pear", "en", translations, {}, { capitalize: true })).toBe("Pear");
+    });
+
+    it("falls back when context or count isn't found", () => {
+        expect(translate("context.doctor", "en", translations)).toBe("Doctor");
+        expect(translate("context.doctor", "cs", translations)).toBe("Doktor");
+
+        expect(translate("context.doctor", "en", translations, {}, { context: "male" })).toBe("Doctor");
+        expect(translate("context.doctor", "en", translations, {}, { context: "female" })).toBe("Doctor");
+
+        expect(translate("context.doctor", "cs", translations, {}, { context: "male" })).toBe("Doktor");
+        expect(translate("context.doctor", "cs", translations, {}, { context: "female" })).toBe("Doktorka");
+
+        expect(translate("count.pear", "cs", translations, { count: 2 }, { context: "fruit" })).toBe("Hruška");
+        expect(translate("count.pear", "cs", translations, { count: 2 })).toBe("Hruška");
+        expect(translate("count.pear", "cs", translations, {})).toBe("Hruška");
+    });
+
+    it("chains multiple contexts together and falls back on previous context if not found", () => {
+        expect(translate("context.round", "cs", translations, {}, { context: ["adj", "male"] })).toBe("kulatý");
+        expect(translate("context.round", "cs", translations, {}, { context: ["adj", "female"] })).toBe("kulatá");
+
+        expect(translate("context.round", "en", translations, {}, { context: ["adj", "male"] })).toBe("round");
+        expect(translate("context.round", "en", translations, {}, { context: ["adj", "female"] })).toBe("round");
+
+        expect(translate("context.doctor", "cs", translations, {}, { context: ["adj", "neutral"] })).toBe("doktorské");
+        expect(translate("context.doctor", "cs", translations, {}, { context: ["adj", "female"] })).toBe("doktorský");
+
+        expect(translate("context.doctor", "en", translations, {}, { context: ["adj", "neutral"] })).toBe("doctors");
+        expect(translate("context.doctor", "en", translations, {}, { context: ["adj", "female"] })).toBe("doctors");
+    });
 });
