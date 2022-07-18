@@ -8,7 +8,7 @@ function translate(key, locale, translations, params, options) {
         return null;
     }
     var translation = null;
-    translation = tryGetTranslation(key, options === null || options === void 0 ? void 0 : options.context, params, translations, locale);
+    translation = tryGetTranslation(key, options, params, translations, locale);
     if (!translation) {
         return key;
     }
@@ -24,7 +24,8 @@ function translate(key, locale, translations, params, options) {
     return translation;
 }
 exports.translate = translate;
-function tryGetTranslation(key, context, params, translations, locale) {
+function tryGetTranslation(key, options, params, translations, locale) {
+    var context = options.context, ordinal = options.ordinal;
     var _context = null;
     if (typeof context === "string") {
         _context = [context];
@@ -39,10 +40,11 @@ function tryGetTranslation(key, context, params, translations, locale) {
         if (params) {
             var paramsKeys = Object.keys(params);
             if (paramsKeys.includes(COUNT_KEY)) {
-                var rules = new Intl.PluralRules(locale);
+                var rules = new Intl.PluralRules(locale, { type: ordinal ? "ordinal" : "cardinal" });
                 var count = params[COUNT_KEY];
                 var rule = rules.select(count);
-                modifiedKey += "_".concat(rule);
+                modifiedKey += "_".concat(rule).concat(ordinal ? "_ordinal" : "");
+                console.log(locale, rule, modifiedKey, count);
             }
         }
         translation = getTranslation(modifiedKey, translations[locale]);

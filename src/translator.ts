@@ -2,6 +2,7 @@ export type Options = {
     interpolation?: Interpolation;
     capitalize?: boolean;
     context?: string | string[];
+    ordinal?: boolean;
 };
 
 export type Interpolation = {
@@ -27,7 +28,7 @@ export function translate(
 
     let translation = null;
 
-    translation = tryGetTranslation(key, options?.context, params, translations, locale);
+    translation = tryGetTranslation(key, options, params, translations, locale);
 
     if (!translation) {
         return key;
@@ -50,11 +51,12 @@ export function translate(
 
 function tryGetTranslation(
     key: string,
-    context: string | string[],
+    options: Options,
     params: Params,
     translations: Translations,
     locale: string
 ) {
+    const { context, ordinal } = options;
     let _context: string[] | null = null;
     if (typeof context === "string") {
         _context = [context];
@@ -71,11 +73,12 @@ function tryGetTranslation(
             const paramsKeys = Object.keys(params);
 
             if (paramsKeys.includes(COUNT_KEY)) {
-                const rules = new Intl.PluralRules(locale);
+                const rules = new Intl.PluralRules(locale, { type: ordinal ? "ordinal" : "cardinal" });
                 const count = params[COUNT_KEY];
                 const rule = rules.select(count);
-
-                modifiedKey += `_${rule}`;
+                
+                modifiedKey += `_${rule}${ordinal ? "_ordinal" : ""}`;
+                console.log(locale, rule, modifiedKey, count)
             }
         }
 

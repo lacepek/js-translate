@@ -21,6 +21,10 @@ const translations = {
         count: {
             apple_one: "1 apple",
             apple_other: "{{count}} apples",
+            apple_one_ordinal: "{{count}}st apple",
+            apple_two_ordinal: "{{count}}nd apple",
+            apple_few_ordinal: "{{count}}rd apple",
+            apple_other_ordinal: "{{count}}th apple",
         },
         context: {
             friend: "A friend",
@@ -59,6 +63,7 @@ const translations = {
             apple_one: "1 jablko",
             apple_few: "{{count}} jablka",
             apple_other: "{{count}} jablek",
+            apple_other_ordinal: "{{count}}. jablko",
             pear: "Hruška",
         },
         capitalize: {
@@ -237,5 +242,27 @@ describe("Translator test", () => {
 
         expect(translate("context.doctor", "en", translations, {}, { context: ["adj", "neutral"] })).toBe("doctors");
         expect(translate("context.doctor", "en", translations, {}, { context: ["adj", "female"] })).toBe("doctors");
+    });
+
+    it("uses ordinal plural rules", () => {
+        for (let count = 0; count <= 6; count++) {
+            const apples = translate("count.apple", "cs", translations, { count }, { ordinal: true });
+
+            expect(apples).toBe(`${count}. jablko`);
+        }
+
+        for (let count = 0; count <= 6; count++) {
+            const apples = translate("count.apple", "en", translations, { count }, { ordinal: true });
+
+            if (count === 1) {
+                expect(apples).toBe(`${count}st apple`);
+            } else if (count === 2) {
+                expect(apples).toBe(`${count}nd apple`);
+            } else if (count === 3) {
+                expect(apples).toBe(`${count}rd apple`);
+            } else {
+                expect(apples).toBe(`${count}th apple`);
+            }
+        }
     });
 });

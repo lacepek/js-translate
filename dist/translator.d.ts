@@ -2,6 +2,7 @@ export declare type Options = {
     interpolation?: Interpolation;
     capitalize?: boolean;
     context?: string | string[];
+    ordinal?: boolean;
 };
 export declare type Interpolation = {
     prefix?: string;
