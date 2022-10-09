@@ -44,7 +44,6 @@ function tryGetTranslation(key, options, params, translations, locale) {
                 var count = params[COUNT_KEY];
                 var rule = rules.select(count);
                 modifiedKey += "_".concat(rule).concat(ordinal ? "_ordinal" : "");
-                console.log(locale, rule, modifiedKey, count);
             }
         }
         translation = getTranslation(modifiedKey, translations[locale]);
