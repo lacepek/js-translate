@@ -78,7 +78,6 @@ function tryGetTranslation(
                 const rule = rules.select(count);
                 
                 modifiedKey += `_${rule}${ordinal ? "_ordinal" : ""}`;
-                console.log(locale, rule, modifiedKey, count)
             }
         }
 
