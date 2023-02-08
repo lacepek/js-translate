@@ -7,10 +7,15 @@ function translate(key, locale, translations, params, options) {
     if (key === null || key === undefined) {
         return null;
     }
-    var translation = null;
+    var translation;
     translation = tryGetTranslation(key, options, params, translations, locale);
     if (!translation) {
-        return key;
+        if (options === null || options === void 0 ? void 0 : options.fallbackLocale) {
+            translation = tryGetTranslation(key, options, params, translations, options.fallbackLocale);
+        }
+        if (!translation) {
+            return (options === null || options === void 0 ? void 0 : options.fallbackValue) || key;
+        }
     }
     if (translation instanceof Function) {
         return translation(params);

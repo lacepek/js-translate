@@ -42,6 +42,7 @@ const translations = {
             apple: "{{color}} apple",
             pear: "pear",
         },
+        dog: "Dog"
     },
     cs: {
         test: {
@@ -78,6 +79,7 @@ const translations = {
             round_adj_male: "kulatý",
             round_adj_female: "kulatá",
         },
+        pes: "Pes"
     },
 };
 
@@ -264,5 +266,15 @@ describe("Translator test", () => {
                 expect(apples).toBe(`${count}th apple`);
             }
         }
+    });
+
+    it("uses fallback locale", () => {
+        expect(translate("dog", "cs", translations, {}, { fallbackLocale: "en" })).toBe("Dog");
+        expect(translate("pes", "en", translations, {}, { fallbackLocale: "cs" })).toBe("Pes");
+    });
+
+    it("uses fallback value", () => {
+        expect(translate("dog", "cs", translations, {}, { fallbackValue: "Not found" })).toBe("Not found");
+        expect(translate("pes", "en", translations, {}, { fallbackValue: "Pes not found" })).toBe("Pes not found");
     });
 });

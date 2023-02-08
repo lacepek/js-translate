@@ -1,7 +1,7 @@
 {
   "name": "translate.ts",
-  "version": "1.2.3",
-  "description": "Minimal javascript translation library",
+  "version": "1.3.0",
+  "description": "Minimal typescript translation library",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

@@ -1,17 +1,19 @@
-export declare type Options = {
+export type Options = {
     interpolation?: Interpolation;
     capitalize?: boolean;
     context?: string | string[];
     ordinal?: boolean;
+    fallbackLocale?: string;
+    fallbackValue?: any;
 };
-export declare type Interpolation = {
+export type Interpolation = {
     prefix?: string;
     suffix?: string;
 };
-declare type Params = {
+type Params = {
     [key: string]: any;
 };
-declare type Translations = {
+type Translations = {
     [key: string]: any;
 };
 export declare function translate(key: string, locale: string, translations: Translations, params?: Params, options?: Options): any;

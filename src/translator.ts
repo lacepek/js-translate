@@ -3,6 +3,8 @@ export type Options = {
     capitalize?: boolean;
     context?: string | string[];
     ordinal?: boolean;
+    fallbackLocale?: string;
+    fallbackValue?: any;
 };
 
 export type Interpolation = {
@@ -26,12 +28,18 @@ export function translate(
         return null;
     }
 
-    let translation = null;
+    let translation;
 
     translation = tryGetTranslation(key, options, params, translations, locale);
 
     if (!translation) {
-        return key;
+        if(options?.fallbackLocale) {
+            translation = tryGetTranslation(key, options, params, translations, options.fallbackLocale);
+        }
+
+        if(!translation) {
+            return options?.fallbackValue || key;
+        }
     }
 
     if (translation instanceof Function) {
@@ -76,7 +84,7 @@ function tryGetTranslation(
                 const rules = new Intl.PluralRules(locale, { type: ordinal ? "ordinal" : "cardinal" });
                 const count = params[COUNT_KEY];
                 const rule = rules.select(count);
-                
+
                 modifiedKey += `_${rule}${ordinal ? "_ordinal" : ""}`;
             }
         }
